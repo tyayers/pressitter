@@ -1,15 +1,28 @@
 using System;
-using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using System.Collections.Generic;
 using Pressitter.Dtos;
 using Pressitter.Services;
+using AutoMapper;
 
 namespace Pressitter.Functions
 {
     public static class NewsUpdateTimer
     {
+        static NewsUpdateTimer() {
+            Mapper.Initialize(cfg => {
+                cfg.CreateMap<NewsArticle, NewsTopic>();
+                cfg.CreateMap<NewsArticle, NewsDay>();
+            });
+        }
+
         [FunctionName("NewsUpdateTimer")]
         public static void Run([TimerTrigger("0 30 9 * * *")]TimerInfo myTimer, ILogger log)
         {
