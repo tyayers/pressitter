@@ -32094,6 +32094,8 @@ module.exports = "/../nytimes.737082a5.png";
 module.exports = "/../oglobo.26b81f2c.png";
 },{}],"img/pe.png":[function(require,module,exports) {
 module.exports = "/../pe.419b3cca.png";
+},{}],"img/pressitter.png":[function(require,module,exports) {
+module.exports = "/../pressitter.ea22ff99.png";
 },{}],"img/ru.png":[function(require,module,exports) {
 module.exports = "/../ru.9148cb47.png";
 },{}],"img/shimbun.png":[function(require,module,exports) {
@@ -32128,6 +32130,7 @@ module.exports = {
   "nytimes": require("./nytimes.png"),
   "oglobo": require("./oglobo.png"),
   "pe": require("./pe.png"),
+  "pressitter": require("./pressitter.png"),
   "ru": require("./ru.png"),
   "shimbun": require("./shimbun.png"),
   "spiegel": require("./spiegel.png"),
@@ -32135,7 +32138,7 @@ module.exports = {
   "us": require("./us.png"),
   "za": require("./za.png")
 };
-},{"./ar.png":"img/ar.png","./au.png":"img/au.png","./br.png":"img/br.png","./ca.png":"img/ca.png","./clarin.png":"img/clarin.png","./cn.png":"img/cn.png","./de.png":"img/de.png","./elcomercio.png":"img/elcomercio.png","./elpais.png":"img/elpais.png","./es.png":"img/es.png","./fr.png":"img/fr.png","./globaltimes.png":"img/globaltimes.png","./independentmedia.png":"img/independentmedia.png","./jp.png":"img/jp.png","./lemonde.png":"img/lemonde.png","./mkru.png":"img/mkru.png","./nationalpost.png":"img/nationalpost.png","./nytimes.png":"img/nytimes.png","./oglobo.png":"img/oglobo.png","./pe.png":"img/pe.png","./ru.png":"img/ru.png","./shimbun.png":"img/shimbun.png","./spiegel.png":"img/spiegel.png","./theage.png":"img/theage.png","./us.png":"img/us.png","./za.png":"img/za.png"}],"ArticlesCurrent.tsx":[function(require,module,exports) {
+},{"./ar.png":"img/ar.png","./au.png":"img/au.png","./br.png":"img/br.png","./ca.png":"img/ca.png","./clarin.png":"img/clarin.png","./cn.png":"img/cn.png","./de.png":"img/de.png","./elcomercio.png":"img/elcomercio.png","./elpais.png":"img/elpais.png","./es.png":"img/es.png","./fr.png":"img/fr.png","./globaltimes.png":"img/globaltimes.png","./independentmedia.png":"img/independentmedia.png","./jp.png":"img/jp.png","./lemonde.png":"img/lemonde.png","./mkru.png":"img/mkru.png","./nationalpost.png":"img/nationalpost.png","./nytimes.png":"img/nytimes.png","./oglobo.png":"img/oglobo.png","./pe.png":"img/pe.png","./pressitter.png":"img/pressitter.png","./ru.png":"img/ru.png","./shimbun.png":"img/shimbun.png","./spiegel.png":"img/spiegel.png","./theage.png":"img/theage.png","./us.png":"img/us.png","./za.png":"img/za.png"}],"ArticlesCurrent.tsx":[function(require,module,exports) {
 "use strict";
 
 var __extends = this && this.__extends || function () {
@@ -32186,7 +32189,11 @@ var React = __importStar(require("react"));
 
 var Article_1 = __importDefault(require("./Article"));
 
-var testdata = __importStar(require("./testdata2.json"));
+var testdata = __importStar(require("./testdata2.json")); // import ca from './img/ca.png';
+// import us from './img/us.png';
+// import de from './img/de.png';
+// import fr from './img/fr.png';
+
 
 var __png_1 = __importDefault(require("./img/*.png"));
 
@@ -32215,40 +32222,169 @@ function (_super) {
   ArticlesCurrent.prototype.componentDidMount = function () {
     var _this = this;
 
-    this.setState({
-      news: testdata
-    });
-    fetch("src/testdata.json").then(function (response) {
-      return response.json();
-    }).then(function (data) {
-      return _this.setState({
+    if ("development" === 'development') {
+      this.setState({
         news: testdata
       });
-    });
+    } else {
+      fetch("https://pressitter-functions.azurewebsites.net/api/GetTodaysNews?code=ypUwQNr/R2kkvTUQg9j3DHCGZJ89xbqrJxoog6HxsrTfPrnb7pgSZA==").then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        return _this.setState({
+          news: data
+        });
+      });
+    }
+  };
+
+  ArticlesCurrent.prototype.getGreeting = function () {
+    var myDate = new Date();
+    var result = "Good Morning!";
+    if (myDate.getHours() > 12 && myDate.getHours() < 18) result = "Good Afternoon!";else if (myDate.getHours() >= 18) result = "Good Evening!";
+    return result;
+  };
+
+  ArticlesCurrent.prototype.getFormattedDate = function (date) {
+    var pieces = date.split(".");
+    var newDate = new Date(pieces[2] + "-" + pieces[1] + "-" + pieces[0]);
+    return newDate.toDateString();
   };
 
   ArticlesCurrent.prototype.render = function () {
-    return React.createElement("div", null, React.createElement("h1", null, this.state.TitleEnglish), React.createElement("h2", null, this.state.news.Date), " */}", this.state.news.Topics.map(function (topic, index) {
+    return React.createElement("div", null, React.createElement("div", {
+      className: "jumbotron"
+    }, React.createElement("div", {
+      className: "container"
+    }, React.createElement("h1", {
+      className: "display-4"
+    }, this.getGreeting()), React.createElement("p", {
+      className: "lead"
+    }, "Here are the topics from the worldwide news for ", this.getFormattedDate(this.state.news.Date), "."))), React.createElement("div", {
+      className: "container"
+    }, React.createElement("div", {
+      className: "row"
+    }, this.state.news.Topics.map(function (topic, index) {
       return React.createElement("div", {
+        className: "col-12 topic-collection",
         key: index
-      }, React.createElement("h3", null, topic.Topic), topic.News.map(function (newsitem, i) {
+      }, React.createElement("ul", {
+        className: "list-group"
+      }, React.createElement("li", {
+        className: "list-group-item active"
+      }, topic.Topic), topic.News.map(function (newsitem, i) {
         return React.createElement("div", {
           key: i
+        }, React.createElement("li", {
+          className: "list-group-item"
         }, React.createElement(Article_1.default, {
           TitleEnglish: newsitem.TitleEnglish,
           CountryUrl: __png_1["default"][newsitem.Region],
           LogoUrl: __png_1["default"][newsitem.Source.toLowerCase().replace(" ", "")],
           StoryUrl: newsitem.Url
-        }));
-      }));
-    }));
+        })));
+      })));
+    }))));
   };
 
   return ArticlesCurrent;
 }(React.Component);
 
 exports["default"] = ArticlesCurrent;
-},{"react":"../node_modules/react/index.js","./Article":"Article.tsx","./testdata2.json":"testdata2.json","./img/*.png":"img/*.png"}],"App.tsx":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./Article":"Article.tsx","./testdata2.json":"testdata2.json","./img/*.png":"img/*.png"}],"Header.tsx":[function(require,module,exports) {
+"use strict";
+
+var __extends = this && this.__extends || function () {
+  var _extendStatics = function extendStatics(d, b) {
+    _extendStatics = Object.setPrototypeOf || {
+      __proto__: []
+    } instanceof Array && function (d, b) {
+      d.__proto__ = b;
+    } || function (d, b) {
+      for (var p in b) {
+        if (b.hasOwnProperty(p)) d[p] = b[p];
+      }
+    };
+
+    return _extendStatics(d, b);
+  };
+
+  return function (d, b) {
+    _extendStatics(d, b);
+
+    function __() {
+      this.constructor = d;
+    }
+
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  };
+}();
+
+var __importStar = this && this.__importStar || function (mod) {
+  if (mod && mod.__esModule) return mod;
+  var result = {};
+  if (mod != null) for (var k in mod) {
+    if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+  }
+  result["default"] = mod;
+  return result;
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+exports.__esModule = true;
+
+var React = __importStar(require("react"));
+
+var pressitter_png_1 = __importDefault(require("./img/pressitter.png"));
+
+var Header =
+/** @class */
+function (_super) {
+  __extends(Header, _super);
+
+  function Header(props) {
+    var _this = _super.call(this, props) || this;
+
+    _this.state = {
+      TitleEnglish: "Test Title2",
+      news: null
+    };
+    _this.state = {
+      TitleEnglish: "Test Title3",
+      news: {
+        Date: "Loading..",
+        Topics: []
+      }
+    };
+    return _this;
+  }
+
+  Header.prototype.componentDidMount = function () {};
+
+  Header.prototype.render = function () {
+    return React.createElement("nav", {
+      className: "navbar navbar-light bg-light"
+    }, React.createElement("a", {
+      className: "navbar-brand",
+      href: "#"
+    }, React.createElement("img", {
+      src: pressitter_png_1["default"],
+      width: "30",
+      height: "30",
+      className: "d-inline-block align-top",
+      alt: ""
+    }), React.createElement("i", null, "ressitter")));
+  };
+
+  return Header;
+}(React.Component);
+
+exports["default"] = Header;
+},{"react":"../node_modules/react/index.js","./img/pressitter.png":"img/pressitter.png"}],"App.tsx":[function(require,module,exports) {
 "use strict";
 
 var __importStar = this && this.__importStar || function (mod) {
@@ -32275,8 +32411,11 @@ var react_dom_1 = require("react-dom");
 
 var ArticlesCurrent_1 = __importDefault(require("./ArticlesCurrent"));
 
+var Header_1 = __importDefault(require("./Header"));
+
+react_dom_1.render(React.createElement(Header_1.default, null), document.getElementById('header'));
 react_dom_1.render(React.createElement(ArticlesCurrent_1.default, null), document.getElementById('main'));
-},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./ArticlesCurrent":"ArticlesCurrent.tsx"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-dom":"../node_modules/react-dom/index.js","./ArticlesCurrent":"ArticlesCurrent.tsx","./Header":"Header.tsx"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -32304,7 +32443,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40983" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33379" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

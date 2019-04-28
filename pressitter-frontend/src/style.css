@@ -11,6 +11,11 @@
     -webkit-flex-flow: row nowrap;
     justify-content: flex-start;
     padding: 0px 0px 10px 10px;
+    border: 0px;
+}
+
+.topic-collection {
+    margin-bottom: 10px;
 }
 
 .story-item {
